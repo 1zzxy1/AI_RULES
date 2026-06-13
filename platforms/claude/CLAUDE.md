@@ -1,15 +1,34 @@
-Always respond in Chinese-simplified
+# CLAUDE.md — Claude Code 协作规则
 
-# Claude 项目交接与版本管理规范
+> 派生自 AI_RULES 仓库的 [RULES.md](../../RULES.md)（唯一权威来源）。本文件自包含，可直接放到项目根目录或 `~/.claude/CLAUDE.md` 使用。改规则请先改 RULES.md 再同步回来。
 
-遵循本项目的 AI 协作协议：
+## 一、行为规则
 
-- 先阅读当前目录及上级目录中的 `CLAUDE.md`、`.claude/CLAUDE.md`、`CLAUDE.local.md`，再阅读项目内的 `AGENTS.md`、`GEMINI.md`、`README`、关键文档和 `.ai/`。
-- 如果项目已有 `AGENTS.md` 但没有 `CLAUDE.md`，且本次需要建立项目级 AI 协作规则，可创建项目根目录 `CLAUDE.md`，内容优先使用 `@AGENTS.md` 导入，再补充 Claude 专用规则。
-- 非平凡开发/修复/排障任务开始前，先读取 `.ai/README.md`、`.ai/handoff.md`、`.ai/context.md`。
-- Git、代码和测试是事实来源，`.ai/` 是交接摘要。
-- `CLAUDE.md` 只放稳定规则；一次性发现、调试结论和接手状态优先写入 `.ai/`。
-- 完成代码修改、架构调整、依赖变更或重要排障结论后，更新 `.ai/handoff.md`，必要时更新 `.ai/context.md`、`.ai/log.md`、`.ai/tasks.md`、`.ai/decisions.md` 或 `.ai/inbox.md`。
-- 不要把 API key、token、密码等敏感信息写进规则或 `.ai/`。
-- 不要未经用户要求主动提交；若用户要求提交，提交后在 `.ai/handoff.md` 或 `.ai/log.md` 记录提交信息。
-- 最终回复中简短说明是否更新了 `.ai/`，以及验证过什么。
+**语言**：始终用简体中文回复，结果忠实于事实。中英文间加空格；代码/注释/commit message/报错保持英文；中文标点用全角。
+
+**编码原则**：
+- 极简优先——复杂度是万恶之源，需要大段解释就是太复杂
+- 明确意图优于聪明技巧，选无聊显而易见的实现
+- 数据结构优先
+- 遵循项目现有风格（命名、import、格式）
+- 最小变更，只改需求要求的部分，不顺手重构/加功能
+- 修复而非掩盖——禁止用 `@ts-ignore` / 空 catch / `as any` / skip test 掩盖问题，必须找根因
+- 不主动生成文档（`.ai/` 交接除外），除非用户明确要求
+
+**3 次失败原则**：同一操作连续失败 3 次必须停下重新评估（回看报错→检查假设→换思路或汇报），不要无脑重试。
+
+**Git**：需要读/改工程时先 `git remote -v` 确认远程；没有则主动询问是否创建，确认前不擅自创建或推送。每处改动改完即独立提交（`git add`→`commit`→有远程则`push`）。`--amend`/`--force`/`--no-verify` 仅在用户明确要求时用。提交信息用 Conventional Commits（英文）。Git/代码/测试是事实来源。
+
+**Windows 路径**：Built-in/MCP 工具用双反斜杠 `D:\\work\\src\\main.py`；Bash 用正斜杠 `D:/work/src/main.py`；PowerShell 两者皆可但单条命令内一致，并用 `$null`/`$env:VAR` 等 PS 语法。
+
+**安全**：只做被授权的工作；不可逆/对外操作先确认；删除或覆盖前先查看目标内容；不把密钥/token/密码写进规则或 `.ai/`。
+
+## 二、跨 AI 协作协议（`.ai/`）
+
+- 先读当前及上级目录的 `CLAUDE.md`、`.claude/CLAUDE.md`、`CLAUDE.local.md`，再读项目内 `AGENTS.md`、`GEMINI.md`、`README`、关键文档与 `.ai/`。
+- 非平凡开发/修复/排障开始前，先读 `.ai/README.md`、`.ai/handoff.md`、`.ai/context.md`，必要时读 `log.md`/`decisions.md`/`tasks.md`/`inbox.md`。
+- `CLAUDE.md` 只放稳定规则；一次性发现、调试结论、接手状态优先写入 `.ai/`。
+- 完成代码修改、架构调整、依赖变更或重要排障结论后，更新 `.ai/handoff.md`，必要时更新其它 `.ai/` 文件。
+- 若 `.ai/` 与代码冲突，以代码、测试、Git 历史为准并修正文档。
+- 项目没有 `.ai/` 且本次任务值得交接时，用 `templates/project/.ai/` 创建。
+- 最终回复简短说明是否更新了 `.ai/` 以及验证了什么。

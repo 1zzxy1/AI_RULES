@@ -3,40 +3,35 @@
 ## 最近一次交接
 
 - 时间：2026-06-14
-- 作者：Codex
-- 当前任务：创建并发布 AI_RULES 仓库，沉淀跨 AI 协作提示词。
-- 状态：已发布到 GitHub，准备给其他机器和其他 AI 继续迭代。
+- 作者：Claude Code (Windows)
+- 当前任务：学习 Codex 创建并发布的初版，结合本机全局规则迭代 AI_RULES。
+- 状态：融合迭代完成，已在远程最新提交之上 rebase，待 push。
 
 ## 本次完成
 
-- 创建通用规则 `RULES.md`。
-- 创建 Codex、Claude、Gemini 和通用 AI 平台入口。
-- 创建项目 `.ai/` 模板。
-- 创建安装脚本和接入文档。
+- RULES.md 重构为两部分：**第一部分 · 行为规则**（补入本机全局 CLAUDE.md 的语言/7 条编码原则/3 次失败/Git 纪律/路径表/安全），**第二部分 · 跨 AI 协作协议**（保留并整合 Codex 的 `.ai/` 交接系统）。
+- 四个平台入口文件改为自包含：行为规则 + 协作协议两段，单文件复制即可用。
+- 新增 `scripts/install-project-rules.ps1`（Windows），接口与 `.sh` 对齐：skip-existing、`-Targets` 选装平台、安装 `.ai/` 模板。
+- 新增 `CHANGELOG.md` 做跨平台迭代留痕。
+- README.md / docs/adoption.md 去掉 `/Users/rainor/...` Mac 硬编码路径，改为通用写法（保留 Codex 新增的 `profiles/rainor-macos/` 个人规则快照说明）。
+- `.gitignore` 合并并新增忽略 `.spec-workflow/`、`*.bak`。
 
 ## 涉及文件
 
-- `README.md`
-- `RULES.md`
-- `platforms/**`
-- `templates/project/.ai/**`
-- `scripts/install-project-rules.sh`
+- `RULES.md`、`README.md`、`CHANGELOG.md`、`.gitignore`
+- `platforms/{claude,codex,gemini,generic}/*`
+- `scripts/install-project-rules.ps1`
 - `docs/adoption.md`
-- `.ai/**`
+- `.ai/{handoff,log,inbox,decisions,context}.md`
 
 ## 验证结果
 
-- 已运行目录检查：`find /Users/rainor/AI_RULES -maxdepth 4 -type f | sort`
-- 已确认关键文件存在：`README.md`、`RULES.md`、平台入口、模板、安装脚本。
-- 已执行安装脚本冒烟测试：`/Users/rainor/AI_RULES/scripts/install-project-rules.sh /tmp/ai_rules_install_test codex claude gemini`
-- 已确认临时项目生成 `.ai/`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`。
-- 已创建 GitHub 仓库：`https://github.com/1zzxy1/AI_RULES`
-- 已确认远程包含 `.ai/`、`platforms/`、`templates/`、`scripts/`、`RULES.md`。
-- 已补充 `profiles/rainor-macos/`，保存本机当前 Codex/Claude 全局规则快照，便于 Windows 机器参考迁移。
+- PowerShell 安装脚本已在临时目录冒烟测试：按 `-Targets` 选装正确，`.ai/` 模板齐全，重复运行正确 skip。
+- 远程已由 Codex 发布到 `https://github.com/1zzxy1/AI_RULES`，并含 `profiles/rainor-macos/`（本机 Codex/Claude 全局规则快照）；本次改动已 rebase 到 `origin/main`（含该快照提交）之上，未丢弃任何远程内容。
 
 ## 下一步建议
 
-- 根据不同平台真实行为继续压缩/调整入口文件。
-- 给 Gemini 补充更具体的工具适配规则。
-- 在 Windows 机器 clone 后，让本地 Claude/Codex/Gemini 先读 `README.md`、`RULES.md` 和 `.ai/handoff.md`，再提交迭代。
-- 若要同步 Rainor 个人级规则，参考 `profiles/rainor-macos/AGENTS.md` 和 `profiles/rainor-macos/CLAUDE.md`；若要给项目接入，优先使用 `platforms/` 和 `templates/project/.ai/`。
+- 在真实项目里跑一遍安装脚本，验证 `.ai/` 模板可用性。
+- 给 Gemini 补充更具体的工具/文件名适配（见 tasks.md P1）。
+- 后续平台 AI 迭代时严格走「先改 RULES.md → 同步 platforms → 记 CHANGELOG → 更新 `.ai/`」。
+- 同步个人级规则参考 `profiles/rainor-macos/`；项目接入用 `platforms/` 与 `templates/project/.ai/`。

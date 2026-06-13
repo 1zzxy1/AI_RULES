@@ -1,6 +1,11 @@
 .DS_Store
+Thumbs.db
 *.log
+*.bak
 node_modules/
 .env
 .env.*
 !.env.example
+
+# 工具本地产物，不纳入规则库
+.spec-workflow/
