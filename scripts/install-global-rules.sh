@@ -1,11 +1,13 @@
 #!/usr/bin/env sh
-# 把 AI_RULES 平台规则装成本机【全局】提示词（macOS / Linux）。
-# 覆盖式同步（区别于项目级脚本的 skip-existing）：每次覆盖目标，覆盖前备份为 *.bak.<时间戳>。
-#   platforms/claude/CLAUDE.md -> $HOME/.claude/CLAUDE.md
-#   platforms/codex/AGENTS.md  -> $HOME/.codex/AGENTS.md
-#   platforms/gemini/GEMINI.md -> $HOME/.gemini/GEMINI.md
-# 用法: ./install-global-rules.sh [claude] [codex] [gemini] [--profile <machine>] [--dry-run]
-#   省略平台则三者全装。--profile 在通用核心后追加 profiles/<machine>/ 片段。
+# 把 AI_RULES 规则装成本机【全局】提示词（macOS / Linux）。
+# 落盘文件 = 平台入口适配 + RULES.md 核心（+ 可选 profile 片段），即【自包含】，
+# 不依赖安装目录里另有 RULES.md。覆盖式同步（区别于项目级脚本的 skip-existing）：
+# 每次覆盖目标，覆盖前备份为 *.bak.<时间戳>。
+#   platforms/claude/CLAUDE.md (+RULES.md) -> $HOME/.claude/CLAUDE.md
+#   platforms/codex/AGENTS.md  (+RULES.md) -> $HOME/.codex/AGENTS.md
+#   platforms/gemini/GEMINI.md (+RULES.md) -> $HOME/.gemini/GEMINI.md
+# 用法: ./install-global-rules.sh [claude] [codex] [gemini] [--profile <name>] [--dry-run]
+#   省略平台则三者全装。--profile 在核心后追加 profiles/<name>/ 片段（如 rainor-opinionated）。
 set -eu
 
 REPO_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
@@ -58,11 +60,15 @@ for t in $TARGETS; do
 
   mkdir -p "$(dirname "$dst")"
   if [ -e "$dst" ]; then cp "$dst" "$dst.bak.$STAMP"; printf '备份 %s -> %s.bak.%s\n' "$dst" "$dst" "$STAMP"; fi
-  if [ "$use_profile" -eq 1 ]; then
-    { cat "$src"; printf '\n\n---\n# 本机个性化（profile: %s）\n\n' "$PROFILE"; cat "$pf"; } > "$dst"
-  else
-    cp "$src" "$dst"
-  fi
+  {
+    cat "$src"
+    printf '\n\n---\n\n# 通用核心规则（来自 AI_RULES / RULES.md）\n\n'
+    cat "$REPO_DIR/RULES.md"
+    if [ "$use_profile" -eq 1 ]; then
+      printf '\n\n---\n\n# 个人偏好（profile: %s）\n\n' "$PROFILE"
+      cat "$pf"
+    fi
+  } > "$dst"
   printf '安装 %s\n' "$dst"
 done
 

@@ -2,24 +2,12 @@
 
 始终使用简体中文回复。
 
-本文件派生自 AI_RULES 的 `RULES.md`，可直接放到项目根目录作为 `AGENTS.md`。核心规则以 `RULES.md` 为准；本文件只保留 Codex 入口需要的薄封装。
+本文件是 Codex 的入口适配，与仓库 `RULES.md` 同源。**安装脚本会把 `RULES.md` 核心合入落盘文件**；手动复制时请连同 `RULES.md` 一起参考，否则只有下面的入口约定、缺完整核心。
 
-## 工作前
+## Codex 专属入口约定
 
-- 定位项目根目录，先看 `git status --short`。
-- 阅读项目内 `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、README、相关源码和测试。
+- 可直接作为项目根目录 `AGENTS.md`，或放到 `~/.codex/AGENTS.md` 作全局规则。
+- 阅读项目内 `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、README、相关源码与测试。
 - 若存在 `.ai/`，按 `.ai/README.md` → `.ai/handoff.md` → `.ai/context.md` 顺序读取。
 
-## 工作中
-
-- 遵循现有风格，复用已有实现和工具，保持最小变更。
-- Git、代码和测试是事实来源；`.ai/` 只做交接摘要。
-- 不回滚用户或其他 AI 的未说明改动。
-- 删除、覆盖、推送、发布等不可逆或外部操作前确认授权。
-
-## 工作后
-
-- 非平凡修改或重要排障后更新 `.ai/handoff.md`，必要时更新 `.ai/context.md`、`log.md`、`tasks.md`、`decisions.md`、`inbox.md`。
-- 最终回复说明改了什么、验证了什么、是否更新 `.ai/`。
-
-完整原则见仓库 `RULES.md`。
+核心行为、Git/安全、路径、`.ai/` 协作与交接、失败处理等通用规则见 `RULES.md`。

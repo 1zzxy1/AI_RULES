@@ -18,7 +18,7 @@
 ./scripts/install-project-rules.sh /path/to/project codex claude gemini
 ```
 
-脚本会复制对应平台入口文件到项目根目录，并把 `templates/project/.ai/` 复制为项目的 `.ai/`。
+脚本会把 `RULES.md` 核心合入对应平台入口、写到项目根目录（落盘文件【自包含】，项目内无需另有 `RULES.md`），并把 `templates/project/.ai/` 复制为项目的 `.ai/`。
 
 ### 方式 B：手动复制
 
@@ -29,7 +29,7 @@
 | Gemini CLI | `platforms/gemini/GEMINI.md` | `GEMINI.md` |
 | 其它 | `platforms/generic/AI_PROMPT.md` | 粘进系统提示词 |
 
-再把 `templates/project/.ai/` 复制为项目的 `.ai/`。
+再把 `templates/project/.ai/` 复制为项目的 `.ai/`。**注意**：`platforms/` 下的入口文件本身只含平台适配、不含完整核心；手动复制时请连同 `RULES.md` 一起参考，或改用上面的脚本（脚本会自动合入核心生成自包含文件）。
 
 ## 二、全局安装：每台机器的通用提示词
 
@@ -41,7 +41,7 @@
 | `platforms/codex/AGENTS.md` | `~/.codex/AGENTS.md` |
 | `platforms/gemini/GEMINI.md` | `~/.gemini/GEMINI.md` |
 
-与项目级脚本（skip-existing）不同，全局脚本是**覆盖式同步**——全局规则需随仓库更新，所以每次覆盖目标，并在覆盖前把旧文件备份为 `*.bak.<时间戳>`。
+落盘文件 = 平台入口适配 + `RULES.md` 核心（+ 可选 profile 片段），即【自包含】，不依赖安装目录里另有 `RULES.md`。与项目级脚本（skip-existing）不同，全局脚本是**覆盖式同步**——全局规则需随仓库更新，所以每次覆盖目标，并在覆盖前把旧文件备份为 `*.bak.<时间戳>`。
 
 ```powershell
 # Windows
@@ -76,7 +76,7 @@
 
 推荐可安装 profile：
 
-- `profiles/rainor-opinionated/`：轻量个人偏好，适合用 `-Profile rainor-opinionated` 追加到全局规则。
+- `profiles/rainor-opinionated/`：轻量个人偏好（计划门禁、小步提交倾向），适合用 `-Profile rainor-opinionated` 追加。**默认安装（不带 profile）不含这两条**——这是相对「每次改动即提交」硬约束的有意放宽，需要时显式追加。「结论先行 / 引用前核实」已在核心 `RULES.md`，无需 profile。
 
 历史参考 profile：
 

@@ -19,13 +19,18 @@ fi
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 REPO_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 
+# 落盘 = 平台入口适配 + RULES.md 核心（自包含，项目内无需另有 RULES.md）；已存在则跳过
 install_file() {
   src=$1
   dst=$2
   if [ -e "$dst" ]; then
     printf 'skip existing %s\n' "$dst"
   else
-    cp "$src" "$dst"
+    {
+      cat "$src"
+      printf '\n\n---\n\n# 通用核心规则（来自 AI_RULES / RULES.md）\n\n'
+      cat "$REPO_DIR/RULES.md"
+    } > "$dst"
     printf 'installed %s\n' "$dst"
   fi
 }

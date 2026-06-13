@@ -10,3 +10,4 @@
 - 2026-06-14 | Claude (Windows) | 新增全局安装脚本与跨机器同步说明 | scripts/install-global-rules.* / README / docs/adoption.md | PowerShell 临时 HOME 冒烟测试通过
 - 2026-06-14 | Codex (macOS) | 修复 macOS/Linux 全局安装脚本执行权限 | scripts/install-global-rules.sh | dry-run 确认脚本逻辑可用
 - 2026-06-14 | Codex (macOS) | 蒸馏核心规则并分离个人偏好 | RULES.md / platforms/** / profiles/rainor-opinionated/** | 行数统计、关键词检查、全局 dry-run、项目安装冒烟测试通过
+- 2026-06-14 | Claude (Windows) | 复审 distill-core 并修复 4 阻塞项：安装合入 RULES.md 核心、补回 4 条必回规则、修 PS -Profile GBK 乱码、文档诚实化 | RULES.md / platforms/** / profiles/rainor-opinionated/** / scripts/install-*.{ps1,sh} / README / docs / .ai/** | 9-agent 对抗复审；四脚本落盘自包含+无乱码实测通过
