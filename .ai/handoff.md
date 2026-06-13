@@ -4,34 +4,35 @@
 
 - 时间：2026-06-14
 - 作者：Claude Code (Windows)
-- 当前任务：学习 Codex 创建并发布的初版，结合本机全局规则迭代 AI_RULES。
-- 状态：融合迭代完成，已在远程最新提交之上 rebase，待 push。
+- 当前任务：用 agent 集群交叉分析本机 Claude/Codex/Gemini 提示词，把可通用的增量融入 AI_RULES，并准备让仓库成为每台机器的全局提示词来源。
+- 状态：5 条放行规则 + 3 个冲突裁决已落地 RULES.md 与 4 个平台副本；全局安装脚本待建（用户选择「先建脚本暂不安装」）。
 
 ## 本次完成
 
-- RULES.md 重构为两部分：**第一部分 · 行为规则**（补入本机全局 CLAUDE.md 的语言/7 条编码原则/3 次失败/Git 纪律/路径表/安全），**第二部分 · 跨 AI 协作协议**（保留并整合 Codex 的 `.ai/` 交接系统）。
-- 四个平台入口文件改为自包含：行为规则 + 协作协议两段，单文件复制即可用。
-- 新增 `scripts/install-project-rules.ps1`（Windows），接口与 `.sh` 对齐：skip-existing、`-Targets` 选装平台、安装 `.ai/` 模板。
-- 新增 `CHANGELOG.md` 做跨平台迭代留痕。
-- README.md / docs/adoption.md 去掉 `/Users/rainor/...` Mac 硬编码路径，改为通用写法（保留 Codex 新增的 `profiles/rainor-macos/` 个人规则快照说明）。
-- `.gitignore` 合并并新增忽略 `.spec-workflow/`、`*.bak`。
+- 用工作流（19 挖掘 + 7 盘点 + 合成 + 守门 + 提案，共 43 个 agent）分析了 `~/.claude`、`~/.claude_backup`、`~/.codex`、`~/.gemini` 等处的提示词。
+- 守门人从 15 候选放行 5 条，已并入 RULES.md（极简优先，能并入就不另起条目）：
+  - c7 → 第一部分第 2 条「遵循现有风格」补「先看相似实现、复用既有库、无理由不引入新工具」。
+  - c8+c9 → 第一部分第 2 条新增「引用前核实、交付前自检」反幻觉条目。
+  - c1+c2 → 第二部分新增「10. 汇报与计划纪律」（结论先行、计划门禁）。
+- 按用户裁决处理 3 个冲突：
+  - 注释语言：由「保持英文」改为「跟随代码库已有语言（无先例默认英文）」。
+  - 提交策略：确认「每次改动即提交」为权威，删除 codex/AGENTS.md 与 generic/AI_PROMPT.md 里矛盾的「未经用户要求不主动提交」，并同步去掉 RULES.md 第 9 条的同款矛盾表述。
+  - 既有文档：「不主动生成文档」细化为「不新建，但改动影响到的既有文档/注释同步更新」。
+- 4 个平台副本（claude/codex/gemini/generic）全部同步上述改动。
 
 ## 涉及文件
 
-- `RULES.md`、`README.md`、`CHANGELOG.md`、`.gitignore`
+- `RULES.md`
 - `platforms/{claude,codex,gemini,generic}/*`
-- `scripts/install-project-rules.ps1`
-- `docs/adoption.md`
-- `.ai/{handoff,log,inbox,decisions,context}.md`
+- `CHANGELOG.md`、`.ai/{handoff,log,decisions}.md`
 
 ## 验证结果
 
-- PowerShell 安装脚本已在临时目录冒烟测试：按 `-Targets` 选装正确，`.ai/` 模板齐全，重复运行正确 skip。
-- 远程已由 Codex 发布到 `https://github.com/1zzxy1/AI_RULES`，并含 `profiles/rainor-macos/`（本机 Codex/Claude 全局规则快照）；本次改动已 rebase 到 `origin/main`（含该快照提交）之上，未丢弃任何远程内容。
+- 交叉分析工作流完成：43 个 agent、约 193 万 tokens、208 次工具调用。
+- 规则改动均为文本编辑，已逐条核对 4 个平台副本与 RULES.md 在「编码原则」「协作协议」两段语义一致。
 
 ## 下一步建议
 
-- 在真实项目里跑一遍安装脚本，验证 `.ai/` 模板可用性。
-- 给 Gemini 补充更具体的工具/文件名适配（见 tasks.md P1）。
-- 后续平台 AI 迭代时严格走「先改 RULES.md → 同步 platforms → 记 CHANGELOG → 更新 `.ai/`」。
-- 同步个人级规则参考 `profiles/rainor-macos/`；项目接入用 `platforms/` 与 `templates/project/.ai/`。
+- 落地全局安装脚本 `scripts/install-global-rules.{ps1,sh}`：把 platforms/* 装到 `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/.gemini/GEMINI.md`（覆盖式 + 时间戳备份，区别于项目级 skip-existing），支持 `-Targets`/`-Profile`/`-DryRun`，并写进 README「全局安装」。
+- 用户已选「先建脚本暂不安装」——脚本建好后由用户自行在各机器执行。
+- 机器差异（Windows 路径偏好、本机特有工具）用 `profiles/<machine>/` 片段隔离，避免污染通用核心。
