@@ -9,3 +9,4 @@
 - 2026-06-14 | Claude (Windows) | agent 集群交叉分析本机提示词，放行 5 条规则并入 RULES.md + 4 副本，按裁决处理注释语言/提交策略/既有文档 3 个冲突 | RULES.md / platforms/** / CHANGELOG / .ai/** | 43 agent 工作流完成；逐条核对副本与 RULES.md 语义一致
 - 2026-06-14 | Claude (Windows) | 新增全局安装脚本与跨机器同步说明 | scripts/install-global-rules.* / README / docs/adoption.md | PowerShell 临时 HOME 冒烟测试通过
 - 2026-06-14 | Codex (macOS) | 修复 macOS/Linux 全局安装脚本执行权限 | scripts/install-global-rules.sh | dry-run 确认脚本逻辑可用
+- 2026-06-14 | Codex (macOS) | 蒸馏核心规则并分离个人偏好 | RULES.md / platforms/** / profiles/rainor-opinionated/** | 行数统计、关键词检查、全局 dry-run、项目安装冒烟测试通过

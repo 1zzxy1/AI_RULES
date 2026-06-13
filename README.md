@@ -4,26 +4,28 @@
 
 目标：让不同电脑、不同 AI 接手同一个项目时，先读同一套规则、同一个协作目录，再基于 Git 和代码事实继续工作，避免规则漂移、上下文断裂。
 
-## 两层设计
+## 三层设计
 
-- **行为规则**：AI 写代码时怎么做——语言、编码原则、Git 纪律、路径、安全。
-- **跨 AI 协作协议**：多个 AI 通过项目根目录的 `.ai/` 接力——`context` / `handoff` / `log` / `decisions` / `tasks` / `inbox`。Git 是事实来源，`.ai/` 只是交接摘要。
+- **核心规则**：`RULES.md`，只保留跨平台都应遵守的最小协议。
+- **平台入口**：`platforms/`，给 Codex、Claude、Gemini 等工具的薄封装。
+- **个人偏好**：`profiles/`，保存机器差异和更强的个人工作流偏好。
 
-二者都收敛在唯一权威来源 [RULES.md](RULES.md)；`platforms/` 下是各平台自包含副本，可单文件复制即用。
+Git、代码和测试是事实来源，`.ai/` 只是交接摘要。改规则时先改 [RULES.md](RULES.md)，再同步 `platforms/`。
 
 ## 结构
 
 ```text
 AI_RULES/
-├── RULES.md                      # ★ 唯一权威来源：行为规则 + 协作协议
+├── RULES.md                      # ★ 唯一权威来源：精简核心规则
 ├── CHANGELOG.md                  # 跨平台迭代留痕
-├── platforms/                    # 各平台自包含副本（可单独复制使用）
+├── platforms/                    # 各平台薄入口（可单独复制使用）
 │   ├── claude/CLAUDE.md
 │   ├── codex/AGENTS.md
 │   ├── gemini/GEMINI.md
 │   └── generic/AI_PROMPT.md
-├── profiles/                     # 个人级全局规则快照（参考用）
-│   └── rainor-macos/             #   AGENTS.md / CLAUDE.md
+├── profiles/                     # 个人偏好与机器差异
+│   ├── rainor-opinionated/       #   可追加安装的轻量偏好
+│   └── rainor-macos/             #   历史全局规则快照（参考用）
 ├── templates/project/.ai/        # 复制到具体项目的协作目录模板
 ├── scripts/
 │   ├── install-project-rules.ps1 # 项目级安装（Windows，skip-existing）
@@ -61,34 +63,36 @@ AI_RULES/
 .\scripts\install-global-rules.ps1                 # 三平台全装
 .\scripts\install-global-rules.ps1 -Targets claude # 只装 Claude
 .\scripts\install-global-rules.ps1 -DryRun         # 预演不落盘
-.\scripts\install-global-rules.ps1 -Profile xu-windows  # 通用核心 + 本机片段
+.\scripts\install-global-rules.ps1 -Profile rainor-opinionated  # 核心 + 个人偏好
 ```
 
 ```bash
 # macOS / Linux
 ./scripts/install-global-rules.sh                       # 三平台全装
 ./scripts/install-global-rules.sh claude gemini         # 选装
-./scripts/install-global-rules.sh --profile rainor-macos  # 通用核心 + 本机片段
+./scripts/install-global-rules.sh --profile rainor-opinionated  # 核心 + 个人偏好
 ./scripts/install-global-rules.sh --dry-run             # 预演不落盘
 ```
 
-更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑 `install-global-rules`**。机器差异（路径偏好、本机特有工具）放 `profiles/<machine>/`，用 `-Profile`/`--profile` 追加，不污染通用核心。
+更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑 `install-global-rules`**。机器差异或个人偏好放 `profiles/<name>/`，用 `-Profile`/`--profile` 追加，不污染通用核心。
 
-## 个人配置备份
+## Profiles
 
-`profiles/rainor-macos/` 保存了 Rainor 当前 macOS 本机正在使用的全局 Codex/Claude 规则快照：
+`profiles/rainor-opinionated/` 是推荐追加安装的轻量个人偏好，包含结论先行、小步提交倾向、较复杂任务先说明计划等规则。
+
+`profiles/rainor-macos/` 保存了 Rainor macOS 曾经使用的全局 Codex/Claude 规则快照：
 
 - `profiles/rainor-macos/AGENTS.md`：来自 `~/.codex/AGENTS.md`
 - `profiles/rainor-macos/CLAUDE.md`：来自 `~/.claude/CLAUDE.md`
 
-Windows 或其他机器可以参考这个目录迁移个人级规则；项目级规则仍建议使用 `platforms/` 和 `templates/project/.ai/`。
+它主要用于参考和追溯，不建议直接作为全局安装 profile 追加，否则会把旧版长提示词重新叠加到精简核心后面。
 
 ## 给 AI 的迭代约定
 
 如果你是 AI，正在修改本仓库：
 
 1. 先读 [RULES.md](RULES.md) 和 [.ai/handoff.md](.ai/handoff.md)。
-2. **改规则先改 RULES.md**，再同步 `platforms/` 下各自包含副本（保持语义一致，允许入口文件适配平台习惯）。
+2. **改规则先改 RULES.md**，再同步 `platforms/` 下各平台入口（保持语义一致，允许入口文件适配平台习惯）。
 3. 不要把某个项目的一次性状态写进平台规则文件。
 4. 在 [CHANGELOG.md](CHANGELOG.md) 追加一条，更新 `.ai/handoff.md`，必要时回复 `.ai/inbox.md`。
 5. 完成后运行 `git status --short`，并在回复中说明改了什么、验证了什么。

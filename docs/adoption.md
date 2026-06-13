@@ -48,7 +48,7 @@
 .\scripts\install-global-rules.ps1                      # 三平台全装
 .\scripts\install-global-rules.ps1 -Targets claude      # 选装
 .\scripts\install-global-rules.ps1 -DryRun              # 预演不落盘
-.\scripts\install-global-rules.ps1 -Profile xu-windows  # 通用核心 + 本机片段
+.\scripts\install-global-rules.ps1 -Profile rainor-opinionated  # 核心 + 个人偏好
 ```
 
 ```bash
@@ -56,10 +56,10 @@
 ./scripts/install-global-rules.sh                         # 三平台全装
 ./scripts/install-global-rules.sh claude gemini           # 选装
 ./scripts/install-global-rules.sh --dry-run               # 预演不落盘
-./scripts/install-global-rules.sh --profile rainor-macos  # 通用核心 + 本机片段
+./scripts/install-global-rules.sh --profile rainor-opinionated  # 核心 + 个人偏好
 ```
 
-机器差异（路径偏好、本机特有工具）放 `profiles/<machine>/`，用 `-Profile`/`--profile` 在通用核心后追加片段，不污染通用核心。多机更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑全局脚本**。
+机器差异（路径偏好、本机特有工具）或个人偏好放 `profiles/<name>/`，用 `-Profile`/`--profile` 在通用核心后追加片段，不污染通用核心。多机更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑全局脚本**。
 
 > 注意：覆盖式同步会覆盖你手写在 `~/.claude/CLAUDE.md` 等处但未沉淀到 `profiles/` 的个性化内容（会先备份为 `.bak.<时间戳>`）。首次建议先 `-DryRun`/`--dry-run` 预演。
 
@@ -72,25 +72,29 @@
 3. 复制 `templates/project/.ai/` 为项目的 `.ai/`；
 4. 若已有旧版 `AI_CONTEXT.md`，把长期状态迁到 `.ai/context.md`、最近交接迁到 `.ai/handoff.md`。
 
-## 四、同步个人级规则
+## 四、Profiles 与个人级规则
 
-如果要把某台机器本机正在用的个人级（全局）规则同步到另一台机器，可参考 `profiles/` 下的快照，例如：
+推荐可安装 profile：
+
+- `profiles/rainor-opinionated/`：轻量个人偏好，适合用 `-Profile rainor-opinionated` 追加到全局规则。
+
+历史参考 profile：
 
 - `profiles/rainor-macos/AGENTS.md`（来自 `~/.codex/AGENTS.md`）
 - `profiles/rainor-macos/CLAUDE.md`（来自 `~/.claude/CLAUDE.md`）
 
-这些是个人配置快照；跨机器使用前先检查路径、平台差异和本机工具习惯。项目级规则仍优先用 `platforms/` 和 `templates/project/.ai/`。
+`rainor-macos` 是旧版完整全局提示词快照，主要用于追溯和迁移，不建议直接追加安装，否则会把长提示词叠到精简核心后面。项目级规则仍优先用 `platforms/` 和 `templates/project/.ai/`。
 
 ## 五、跨平台迭代流程
 
 这套规则会被多个平台的 AI（Claude / Codex / Gemini）轮流复制与改进。为避免漂移，约定：
 
 1. **唯一来源是 [RULES.md](../RULES.md)**：任何规则改动**先改 RULES.md**。
-2. **再同步派生文件**：同步到 `platforms/` 下四个自包含副本（语义一致，允许排版/措辞适配各平台）。
+2. **再同步平台入口**：同步到 `platforms/` 下四个入口文件（语义一致，允许排版/措辞适配各平台）。
 3. **记录到 [CHANGELOG.md](../CHANGELOG.md)**：追加一条 `日期 | 平台 | 改了什么 | 为什么`。
 4. **更新 `.ai/`**：更新 `.ai/handoff.md`，必要时回复 `.ai/inbox.md`。
 5. **提交**：每次迭代单独 commit，message 用 Conventional Commits。
 
 ## 六、校验是否同步
 
-派生文件与 RULES.md 应在「规则条目」上一致。审阅时逐条核对：语言、编码原则 7 条、3 次失败、Git 工作流、路径、安全边界、`.ai/` 协作协议。若某平台需要特例，在该平台文件中显式标注，不要静默偏离。
+平台入口与 RULES.md 应在核心语义上一致。审阅时核对：中文回复、先读再改、最小变更、Git/代码/测试事实源、安全边界、`.ai/` 交接、失败处理。若某平台需要特例，在该平台文件中显式标注，不要静默偏离。
