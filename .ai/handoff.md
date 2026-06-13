@@ -31,8 +31,14 @@
 - 交叉分析工作流完成：43 个 agent、约 193 万 tokens、208 次工具调用。
 - 规则改动均为文本编辑，已逐条核对 4 个平台副本与 RULES.md 在「编码原则」「协作协议」两段语义一致。
 
+## 全局安装脚本（已完成）
+
+- 已建 `scripts/install-global-rules.ps1`（Windows）与 `.sh`（macOS/Linux）：覆盖式同步 + `*.bak.<时间戳>` 备份，支持 `-Targets`/`-Profile`/`-DryRun`；已在临时 HOME 冒烟测试（备份、安装三处、profile 片段追加、缺失片段跳过均正确）。
+- 修复 `.ps1` UTF-8 BOM 问题（PowerShell 5.1 否则按 GBK 解析中文报错）；旧 `install-project-rules.ps1` 一并加 BOM。
+- README、docs/adoption.md 已加「全局安装」章节。
+
 ## 下一步建议
 
-- 落地全局安装脚本 `scripts/install-global-rules.{ps1,sh}`：把 platforms/* 装到 `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/.gemini/GEMINI.md`（覆盖式 + 时间戳备份，区别于项目级 skip-existing），支持 `-Targets`/`-Profile`/`-DryRun`，并写进 README「全局安装」。
-- 用户已选「先建脚本暂不安装」——脚本建好后由用户自行在各机器执行。
-- 机器差异（Windows 路径偏好、本机特有工具）用 `profiles/<machine>/` 片段隔离，避免污染通用核心。
+- 用户已选「先建脚本暂不安装」——各机器自行 `git pull` 后跑 `install-global-rules`（首次建议先 `-DryRun`）。
+- 机器差异（Windows 路径偏好、本机特有工具）建议沉淀到 `profiles/<machine>/`（如 `profiles/xu-windows/`），再用 `-Profile` 追加。
+- 后续平台 AI 迭代仍走「先改 RULES.md → 同步 platforms → 记 CHANGELOG → 更新 `.ai/`」。

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   把 AI_RULES 的平台规则与 .ai/ 模板安装到目标项目（Windows / PowerShell）。
   行为与 scripts/install-project-rules.sh 对齐：已存在的文件/目录跳过，不覆盖。

@@ -29,9 +29,41 @@
 | Gemini CLI | `platforms/gemini/GEMINI.md` | `GEMINI.md` |
 | 其它 | `platforms/generic/AI_PROMPT.md` | 粘进系统提示词 |
 
-再把 `templates/project/.ai/` 复制为项目的 `.ai/`。也可把 `platforms/claude/CLAUDE.md` 放到 `~/.claude/CLAUDE.md` 作全局规则。
+再把 `templates/project/.ai/` 复制为项目的 `.ai/`。
 
-## 二、已有规则文件的项目
+## 二、全局安装：每台机器的通用提示词
+
+把三个平台副本装到本机【全局】位置，让本仓库成为每台机器 Claude/Codex/Gemini 的通用规则来源：
+
+| 源 | 目标（全局） |
+| --- | --- |
+| `platforms/claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+| `platforms/codex/AGENTS.md` | `~/.codex/AGENTS.md` |
+| `platforms/gemini/GEMINI.md` | `~/.gemini/GEMINI.md` |
+
+与项目级脚本（skip-existing）不同，全局脚本是**覆盖式同步**——全局规则需随仓库更新，所以每次覆盖目标，并在覆盖前把旧文件备份为 `*.bak.<时间戳>`。
+
+```powershell
+# Windows
+.\scripts\install-global-rules.ps1                      # 三平台全装
+.\scripts\install-global-rules.ps1 -Targets claude      # 选装
+.\scripts\install-global-rules.ps1 -DryRun              # 预演不落盘
+.\scripts\install-global-rules.ps1 -Profile xu-windows  # 通用核心 + 本机片段
+```
+
+```bash
+# macOS / Linux
+./scripts/install-global-rules.sh                         # 三平台全装
+./scripts/install-global-rules.sh claude gemini           # 选装
+./scripts/install-global-rules.sh --dry-run               # 预演不落盘
+./scripts/install-global-rules.sh --profile rainor-macos  # 通用核心 + 本机片段
+```
+
+机器差异（路径偏好、本机特有工具）放 `profiles/<machine>/`，用 `-Profile`/`--profile` 在通用核心后追加片段，不污染通用核心。多机更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑全局脚本**。
+
+> 注意：覆盖式同步会覆盖你手写在 `~/.claude/CLAUDE.md` 等处但未沉淀到 `profiles/` 的个性化内容（会先备份为 `.bak.<时间戳>`）。首次建议先 `-DryRun`/`--dry-run` 预演。
+
+## 三、已有规则文件的项目
 
 如果项目已有 `AGENTS.md`/`CLAUDE.md`/`GEMINI.md`，**不要直接覆盖**：
 
@@ -40,7 +72,7 @@
 3. 复制 `templates/project/.ai/` 为项目的 `.ai/`；
 4. 若已有旧版 `AI_CONTEXT.md`，把长期状态迁到 `.ai/context.md`、最近交接迁到 `.ai/handoff.md`。
 
-## 三、同步个人级规则
+## 四、同步个人级规则
 
 如果要把某台机器本机正在用的个人级（全局）规则同步到另一台机器，可参考 `profiles/` 下的快照，例如：
 
@@ -49,7 +81,7 @@
 
 这些是个人配置快照；跨机器使用前先检查路径、平台差异和本机工具习惯。项目级规则仍优先用 `platforms/` 和 `templates/project/.ai/`。
 
-## 四、跨平台迭代流程
+## 五、跨平台迭代流程
 
 这套规则会被多个平台的 AI（Claude / Codex / Gemini）轮流复制与改进。为避免漂移，约定：
 
@@ -59,6 +91,6 @@
 4. **更新 `.ai/`**：更新 `.ai/handoff.md`，必要时回复 `.ai/inbox.md`。
 5. **提交**：每次迭代单独 commit，message 用 Conventional Commits。
 
-## 五、校验是否同步
+## 六、校验是否同步
 
 派生文件与 RULES.md 应在「规则条目」上一致。审阅时逐条核对：语言、编码原则 7 条、3 次失败、Git 工作流、路径、安全边界、`.ai/` 协作协议。若某平台需要特例，在该平台文件中显式标注，不要静默偏离。

@@ -26,8 +26,10 @@ AI_RULES/
 │   └── rainor-macos/             #   AGENTS.md / CLAUDE.md
 ├── templates/project/.ai/        # 复制到具体项目的协作目录模板
 ├── scripts/
-│   ├── install-project-rules.ps1 # Windows 安装脚本
-│   └── install-project-rules.sh  # macOS / Linux 安装脚本
+│   ├── install-project-rules.ps1 # 项目级安装（Windows，skip-existing）
+│   ├── install-project-rules.sh  # 项目级安装（macOS / Linux）
+│   ├── install-global-rules.ps1  # 全局安装（Windows，覆盖式 + 备份）
+│   └── install-global-rules.sh   # 全局安装（macOS / Linux）
 ├── docs/adoption.md              # 接入与迭代指南
 └── .ai/                          # 本仓库自己的协作目录（修改本仓库前先读）
 ```
@@ -50,7 +52,27 @@ AI_RULES/
 
 或手动复制 `platforms/<你的助手>/` 下的文件到项目根目录，并把 `templates/project/.ai/` 复制为项目的 `.ai/`。详见 [docs/adoption.md](docs/adoption.md)。
 
-也可把 `platforms/claude/CLAUDE.md` 放到 `~/.claude/CLAUDE.md` 作为全局规则。
+## 全局安装（让仓库成为每台机器的通用提示词）
+
+把三个平台副本装到本机【全局】位置——`~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/.gemini/GEMINI.md`。与项目级脚本不同，全局脚本是**覆盖式同步**（全局规则要随仓库更新），覆盖前自动把旧文件备份为 `*.bak.<时间戳>`：
+
+```powershell
+# Windows
+.\scripts\install-global-rules.ps1                 # 三平台全装
+.\scripts\install-global-rules.ps1 -Targets claude # 只装 Claude
+.\scripts\install-global-rules.ps1 -DryRun         # 预演不落盘
+.\scripts\install-global-rules.ps1 -Profile xu-windows  # 通用核心 + 本机片段
+```
+
+```bash
+# macOS / Linux
+./scripts/install-global-rules.sh                       # 三平台全装
+./scripts/install-global-rules.sh claude gemini         # 选装
+./scripts/install-global-rules.sh --profile rainor-macos  # 通用核心 + 本机片段
+./scripts/install-global-rules.sh --dry-run             # 预演不落盘
+```
+
+更新流程：**改 `RULES.md` → 同步 `platforms/` → 各机器 `git pull` 后重跑 `install-global-rules`**。机器差异（路径偏好、本机特有工具）放 `profiles/<machine>/`，用 `-Profile`/`--profile` 追加，不污染通用核心。
 
 ## 个人配置备份
 
