@@ -30,6 +30,15 @@
 - Claude：读取用户级或项目级 `CLAUDE.md`。
 - Gemini：可使用项目 `GEMINI.md` 或把 `platforms/generic/AI_PROMPT.md` 贴入系统提示词。
 
+## 同步 Rainor 个人规则
+
+如果要把 macOS 本机当前使用的个人级规则同步到另一台机器，可参考：
+
+- `profiles/rainor-macos/AGENTS.md`
+- `profiles/rainor-macos/CLAUDE.md`
+
+这些文件是个人配置快照；跨机器使用前建议先检查路径、平台差异和本机工具习惯。
+
 ## 迭代建议
 
 - 修改规则时优先更新 `RULES.md`。

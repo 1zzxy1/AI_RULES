@@ -27,6 +27,10 @@ AI_RULES/
     claude/CLAUDE.md
     gemini/GEMINI.md
     generic/AI_PROMPT.md
+  profiles/
+    rainor-macos/
+      AGENTS.md
+      CLAUDE.md
   templates/
     project/
       .ai/
@@ -61,6 +65,15 @@ cp /Users/rainor/AI_RULES/platforms/claude/CLAUDE.md /path/to/project/CLAUDE.md
 cp /Users/rainor/AI_RULES/platforms/gemini/GEMINI.md /path/to/project/GEMINI.md
 cp -R /Users/rainor/AI_RULES/templates/project/.ai /path/to/project/.ai
 ```
+
+## 个人配置备份
+
+`profiles/rainor-macos/` 保存了 Rainor 当前 macOS 本机正在使用的全局 Codex/Claude 规则快照：
+
+- `profiles/rainor-macos/AGENTS.md`：来自 `~/.codex/AGENTS.md`
+- `profiles/rainor-macos/CLAUDE.md`：来自 `~/.claude/CLAUDE.md`
+
+Windows 或其他机器可以参考这个目录迁移个人级规则；项目级规则仍建议使用 `platforms/` 和 `templates/project/.ai/`。
 
 ## 给 AI 的迭代原则
 
