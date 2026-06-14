@@ -4,6 +4,7 @@
 
 ---
 
+- **2026-06-15 | Codex (macOS)** | 对比读取 `Mapotofsky/prompt-optimizer`（`9f28074`）：采纳 `Context × Task × Format`、模糊需求先问 2-3 个关键问题、合理默认用假设标注、多段输入加边界、长对话污染时整理源提示词；新增 `docs/prompt-optimizer-comparison.md` 记录采纳/未采纳理由，并扩展系统/用户提示词指南。 | 用户要求参考外部提示词优化仓库继续迭代；该仓库更像用户提示词优化 skill，适合提炼方法论，不适合整段并入系统提示词核心。
 - **2026-06-15 | Codex (macOS)** | 明确系统提示词与用户提示词分工：`RULES.md` 新增分层原则，Claude/Codex/Gemini/generic 平台入口标注为系统提示词层；新增 `docs/system-vs-user-prompts.md`，README/adoption 补充 Mac/Windows 统一安装建议和分层说明。 | 用户希望 Mac 与 Windows 的 Claude/Codex 共用同一套系统提示词，并把「系统提示词定义是什么、用户提示词定义做什么」沉淀为稳定规则，避免把任务样例和临时格式污染全局提示词。
 - **2026-06-14 | Claude Code (Windows)** | 复审 distill-core(1d7ffd6) 并修复后合并：用 9-agent 对抗式复审，裁决 approve-with-fixes。修复 4 个阻塞项——① 落地缺口：安装脚本改为「合入 `RULES.md` 核心」生成自包含落盘文件（全局/项目、ps1/sh 四脚本），不再让薄入口指向安装目录里不存在的 `RULES.md`；② 补回 4 条被过度删减的跨平台核心：中英文加空格+全角标点、新对话主动询问/不擅自创建推送远程、交付前不留占位符、结论先行（回 `RULES.md`，其余计划门禁/小步提交保留在 opinionated profile）；③ 修 PowerShell `-Profile` 在中文 Windows 把无 BOM UTF-8 按 GBK 误读成乱码的 bug（统一 .NET 无 BOM 读写）；④ 文档诚实化：纠正「可单独复制使用」表述、说明默认不含 opinionated 偏好。另补回「数据结构优先」。 | 蒸馏方向（短核心 + 偏好下沉）正确，但薄入口让安装后核心规则丢失、且删了必须跨平台保留的约束，必须修复后才能合并。
 - **2026-06-14 | Codex (macOS)** | 蒸馏核心规则：`RULES.md` 从长条目压缩为最小核心；`platforms/` 改为薄入口；将「结论先行 / 计划门禁 / 小步提交倾向」下沉到 `profiles/rainor-opinionated/`；README/adoption 解释三层结构与 profile 用法。 | Mac 与 Windows 规则都已形成后，压缩共同内核，避免通用规则继续膨胀。

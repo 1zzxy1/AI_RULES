@@ -12,3 +12,4 @@
 - 2026-06-14 | Codex (macOS) | 蒸馏核心规则并分离个人偏好 | RULES.md / platforms/** / profiles/rainor-opinionated/** | 行数统计、关键词检查、全局 dry-run、项目安装冒烟测试通过
 - 2026-06-14 | Claude (Windows) | 复审 distill-core 并修复 4 阻塞项：安装合入 RULES.md 核心、补回 4 条必回规则、修 PS -Profile GBK 乱码、文档诚实化 | RULES.md / platforms/** / profiles/rainor-opinionated/** / scripts/install-*.{ps1,sh} / README / docs / .ai/** | 9-agent 对抗复审；四脚本落盘自包含+无乱码实测通过
 - 2026-06-15 | Codex (macOS) | 增加系统提示词 / 用户提示词分工，平台入口标注为系统提示词层，新增分层说明文档 | RULES.md / platforms/** / README.md / docs/** / .ai/** | diff check、全局 dry-run、临时 HOME 全局安装、临时项目安装均通过
+- 2026-06-15 | Codex (macOS) | 对比 Mapotofsky/prompt-optimizer，提炼 Context × Task × Format、关键提问和结构边界等用户提示词准则 | RULES.md / docs/** / README.md / docs/adoption.md / .ai/** | diff check、全局 dry-run、临时 HOME 全局安装、临时项目安装均通过

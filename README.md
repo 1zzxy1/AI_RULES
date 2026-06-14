@@ -36,6 +36,7 @@ AI_RULES/
 │   └── install-global-rules.sh   # 全局安装（macOS / Linux）
 ├── docs/
 │   ├── adoption.md               # 接入与迭代指南
+│   ├── prompt-optimizer-comparison.md # 外部提示词优化方法对比
 │   └── system-vs-user-prompts.md # 系统提示词与用户提示词分工
 └── .ai/                          # 本仓库自己的协作目录（修改本仓库前先读）
 ```

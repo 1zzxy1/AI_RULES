@@ -69,7 +69,13 @@
 
 用户提示词负责当前这一轮“做什么”：任务目标、输入材料、可改范围、验收标准、临时输出格式和一次性示例。具体任务示例、JSON 样例、报告模板、某次排障日志不要写进全局规则，避免后续任务被错误格式牵引。
 
-更多说明见 [system-vs-user-prompts.md](system-vs-user-prompts.md)。
+写用户提示词时，用 `Context × Task × Format` 做快速自检：
+
+- Context：背景、受众、目的、已有材料。
+- Task：具体动作、范围、步骤、成功标准。
+- Format：输出类型、结构、长度、示例。
+
+更多说明见 [system-vs-user-prompts.md](system-vs-user-prompts.md)。外部方法论对比见 [prompt-optimizer-comparison.md](prompt-optimizer-comparison.md)。
 
 ## 四、已有规则文件的项目
 
